@@ -2,6 +2,7 @@
 # python text_detection.py --image images/lebron_james.jpg --east frozen_east_text_detection.pb
 
 # import the necessary packages
+from multiprocessing.pool import ThreadPool
 from imutils.object_detection import non_max_suppression
 import numpy as np
 import time
@@ -14,7 +15,7 @@ key = ""
 rgb = []
 
 # load the input image and grab the image dimensions
-image = cv2.imread("images/homework.jpg")
+image = cv2.imread("images/sharpened_homework.png")
 
 eighth = image.size // 8
 
@@ -31,6 +32,34 @@ rH = H / float(newH)
 # resize the image and grab the new image dimensions
 image = cv2.resize(image, (newW, newH))
 (H, W) = image.shape[:2]
+
+def find_bg():
+    for i in range(H):
+        for j in range(W):
+            if str(image[i, j]) in colors:
+                color = str(image[i, j])
+                colors[color] += 1
+                
+                if temp < colors[color]:
+                    temp = colors[color]
+                    key = color
+                    colour = image[i, j]
+                if colors[color] == eighth:
+                    temp = colors[color]
+                    key = color
+                    colour = image[i, j]
+                    break         
+            elif str(image[i, j]) not in colors:
+                color = str(image[i, j])
+                colors[color] = 1
+
+    if temp == 0:
+            for color in colors:
+                if temp < colors[color]:
+                    temp = colors[color]
+                    key = color
+
+    return colour
 
 # define the two output layer names for the EAST detector model that
 # we are interested -- the first is the output probabilities and the
@@ -55,42 +84,9 @@ end = time.time()
 # show timing information on text prediction
 print("[INFO] text detection took {:.6f} seconds".format(end - start))
 
-r = int(input("Enter the R "))
-g = int(input("Enter the G "))
-b = int(input("Enter the B "))
 
-rgb.append(r)
-rgb.append(g)
-rgb.append(b)
-
-print(len(rgb))
-
-for i in range(H):
-    for j in range(W):
-        if str(image[i, j]) in colors:
-            color = str(image[i, j])
-            colors[color] += 1
-            
-            if temp < colors[color]:
-                temp = colors[color]
-                key = color
-                colour = image[i, j]
-            if colors[color] == eighth:
-                temp = colors[color]
-                key = color
-                colour = image[i, j]
-                break         
-        elif str(image[i, j]) not in colors:
-            color = str(image[i, j])
-            colors[color] = 1
-
-if temp == 0:
-        for color in colors:
-            if temp < colors[color]:
-                temp = colors[color]
-                key = color
-
-print(colour)
+async_result = pool.apply_async(find_bg)
+bg = async_result.get()
 
 
 # grab the number of rows and columns from the scores volume, then
@@ -187,7 +183,7 @@ for (startX, startY, endX, endY) in rects:
         """
         for i in range(startY, endY):
                 for j in range(startX, endX):
-                        orig[i,j] = colour
+                        orig[i,j] = bg
         """start = time.time()
         for k in range(-5, 5):
             for l in range(len(rgb)):
