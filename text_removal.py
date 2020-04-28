@@ -8,12 +8,6 @@ import numpy as np
 import time
 import cv2
 
-colors = {}
-colour = []
-temp = 0
-key = ""
-rgb = []
-
 # load the input image and grab the image dimensions
 image = cv2.imread("images/sharpened_homework.png")
 
@@ -34,6 +28,10 @@ image = cv2.resize(image, (newW, newH))
 (H, W) = image.shape[:2]
 
 def find_bg():
+    colors = {}
+    colour = []
+    temp = 0
+    key = ""
     for i in range(H):
         for j in range(W):
             if str(image[i, j]) in colors:
@@ -84,7 +82,7 @@ end = time.time()
 # show timing information on text prediction
 print("[INFO] text detection took {:.6f} seconds".format(end - start))
 
-
+pool = ThreadPool(processes=1)
 async_result = pool.apply_async(find_bg)
 bg = async_result.get()
 
