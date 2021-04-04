@@ -10,5 +10,5 @@ Here is the current method of removing the text:
 
 The main issue with this method is the determining of the background color. Many cases could present themselves where the color found to be the most recurrent is not actually the color of the area surrounding the text or of the background of the image as a whole.
 
-Further research will be done to attempt to further improve this project.
+Further research will be done in an attempt to further improve this project.
 
