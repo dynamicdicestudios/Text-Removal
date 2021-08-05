@@ -9,7 +9,7 @@ import time
 import cv2
 
 # load the input image and grab the image dimensions
-image = cv2.imread("images/sharpened_homework.png")
+image = cv2.imread("images/poetry.jpg")
 
 eighth = image.size // 8
 
@@ -94,6 +94,7 @@ bg = async_result.get()
 rects = []
 confidences = []
 
+start = time.time()
 # loop over the number of rows
 for y in range(0, numRows):
         # extract the scores (probabilities), followed by the geometrical
@@ -142,6 +143,8 @@ for y in range(0, numRows):
 # apply non-maxima suppression to suppress weak, overlapping bounding
 # boxes
 boxes = non_max_suppression(np.array(rects), probs=confidences)
+end = time.time()
+print("[INFO] drawing the bounding boxes around text took {:.6f} seconds ".format(end - start))
 
 start = time.time()
 # loop over the bounding boxes
@@ -196,8 +199,8 @@ for (startX, startY, endX, endY) in rects:
         #cv2.rectangle(orig, (startX, startY), (endX, endY), (0, 255, 0), 2)
 
 end = time.time()
-print(end-start)
+print("[INFO] text removal took {:.6f} seconds ".format(end - start))
 
 # show the output image
-cv2.imshow("Text Detection", orig)
+cv2.imshow("Text Removal", orig)
 cv2.waitKey(1)
