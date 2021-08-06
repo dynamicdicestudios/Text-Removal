@@ -82,6 +82,8 @@ end = time.time()
 # show timing information on text prediction
 print("[INFO] text detection took {:.6f} seconds".format(end - start))
 
+#start a thread to find the background color of the image
+#while the bounding box rectangle coordinates are being determined
 pool = ThreadPool(processes=1)
 async_result = pool.apply_async(find_bg)
 bg = async_result.get()
@@ -146,7 +148,7 @@ boxes = non_max_suppression(np.array(rects), probs=confidences)
 end = time.time()
 print("[INFO] drawing the bounding boxes around text took {:.6f} seconds ".format(end - start))
 
-start = time.time()
+start = time.time()        
 # loop over the bounding boxes
 for (startX, startY, endX, endY) in rects:
         box = [[[]]]
@@ -160,28 +162,8 @@ for (startX, startY, endX, endY) in rects:
         #area = abs((startX - endX) * (startY - endY))
         #bg = area // 4
         
-        """for i in range(startY, endY):
-                for j in range(startX, endX):
-                        if str(orig[i, j]) in colors:
-                            color = str(orig[i, j])
-                            colors[color] += 1
-                            if colors[color] == bg:
-                                temp = colors[color]
-                                key = color
-                                colour = orig[i, j]
-                        elif str(orig[i, j]) not in colors:
-                            color = str(orig[i, j])
-                            colors[color] = 1
-        for color in colors:
-                if temp < colors[color]:
-                        temp = colors[color]
-                        key = color
-        start = time.time()
-        indices = np.where(orig!=colour)
-        orig[indices[0], indices[1], :] = [0, 0, 255]
-        end = time.time()
-        print("[INFO] background detection took {:.6f} seconds".format(end - start))
-        """
+        #set the colours of the pixels within and outlining the
+        #bounding box to the background colour
         for i in range(startY, endY):
                 for j in range(startX, endX):
                         orig[i,j] = bg
