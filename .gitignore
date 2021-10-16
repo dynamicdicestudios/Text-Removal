@@ -1,3 +1,7 @@
+out.jpg
+frozen_east_text_detection.pb
+.idea/
+
 *.pb
 # Byte-compiled / optimized / DLL files
 __pycache__/
