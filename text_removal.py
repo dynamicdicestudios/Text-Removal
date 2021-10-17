@@ -1,7 +1,10 @@
 # USAGE
-# python text_detection.py --image images/lebron_james.jpg --east frozen_east_text_detection.pb
+# python text_removal.py --image images/lebron_james.jpg --east frozen_east_text_detection.pb
+# download link: github.com/oyyd/frozen_east_text_detection.pb/blob/master/frozen_east_text_detection.pb?raw=true
+
 
 # import the necessary packages
+# pip install -r requirements.txt
 from multiprocessing.pool import ThreadPool
 from imutils.object_detection import non_max_suppression
 import numpy as np
@@ -185,4 +188,5 @@ print("[INFO] text removal took {:.6f} seconds ".format(end - start))
 
 # show the output image
 cv2.imshow("Text Removal", orig)
+cv2.imwrite( 'out.jpg', orig)
 cv2.waitKey(1)
